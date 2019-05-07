@@ -384,3 +384,11 @@ Used for stylization of components, for mobile or web:
 yarn add styled-components
 ```
 NOTE: An advantage is to use the same css syntax from Web into React-Native.
+
+## REDUX-SAGA
+
+Plugin used to easily manage async calls. 
+
+```bash
+yarn add redux-saga
+```
