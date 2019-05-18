@@ -1,12 +1,17 @@
 import { createStore, compose, applyMiddleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
 
-import combinedReducers from './reducers';
+import combinedReducers from './ducks';
 import rootSaga from './sagas';
 
 const middlewares = [];
 
 const sagaMiddleware = createSagaMiddleware();
+
+// SAGA ELECTOTRON IS NOT WORKING - START
+// const sagaMonitor = __DEV__ ? console.tron.createSagaMonitor() : null;
+// const sagaMiddleware = createSagaMiddleware({sagaMonitor});
+// SAGA ELECTOTRON IS NOT WORKING - END
 
 middlewares.push(sagaMiddleware);
 

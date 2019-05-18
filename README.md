@@ -392,3 +392,63 @@ Plugin used to easily manage async calls.
 ```bash
 yarn add redux-saga
 ```
+
+## REDUX-SAGA REACTOTRON
+
+Plugin used to catch and inspect saga requests treatment
+
+```bash
+yarn add reactotron-redux-saga
+```
+Edit ReactotronConfig.js:
+
+```javascript
+import Reactotron from 'reactotron-react-native';
+import { reactotronRedux } from 'reactotron-redux';
+import reactotronSaga from 'reactotron-redux-saga';
+
+// STUDY_NOTES: '__DEV__' is an envirionment variable (only disponible on NATIVE)
+if (__DEV__) {
+  const tron = Reactotron.configure({ host: '192.168.0.30' }) // controls connection & communication settings
+    .useReactNative() // add all built-in react native plugins
+    .use(reactotronRedux()) // add the reactrotron-redux plugin
+    .use(reactotronSaga)
+    .connect(); // let's connect!
+
+  tron.clear();
+
+  // STUDY_NOTES: The 'console' variable is global, then I can set values on it.
+  console.tron = tron;
+}
+```
+
+Edit store/index.js:
+
+```javascript
+import { createStore, compose, applyMiddleware } from 'redux';
+import createSagaMiddleware from 'redux-saga';
+
+import combinedReducers from './reducers';
+import rootSaga from './sagas';
+
+const middlewares = [];
+
+const sagaMonitor = __DEV__ ? console.tron.createSagaMonitor() : null;
+const sagaMiddleware = createSagaMiddleware({ sagaMonitor });
+
+middlewares.push(sagaMiddleware);
+
+const composer = __DEV__
+  ? compose(
+    applyMiddleware(...middlewares),
+    console.tron.createEnhancer(),
+  )
+  : applyMiddleware(...middlewares);
+
+const store = createStore(combinedReducers, composer);
+
+sagaMiddleware.run(rootSaga);
+
+export default store;
+```
+
